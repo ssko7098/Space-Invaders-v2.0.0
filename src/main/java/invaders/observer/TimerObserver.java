@@ -2,13 +2,12 @@ package invaders.observer;
 
 import javafx.scene.control.Label;
 
-import java.text.DecimalFormat;
-
 public class TimerObserver implements Observer{
 
     private Label label;
     private Timer timer;
-    private static final DecimalFormat df = new DecimalFormat("0.00");
+    private int minutes;
+    private int seconds;
 
     public TimerObserver(Timer timer, Label label) {
         this.label = label;
@@ -17,6 +16,13 @@ public class TimerObserver implements Observer{
 
     @Override
     public void update() {
-        this.label.setText("Time: " + df.format(timer.getTimer()));
+        seconds = (int) timer.getTimer();
+
+        if(seconds == 60) {
+            timer.setTimer(0);
+            minutes ++;
+        }
+
+        this.label.setText("Time: " + String.format("%d:%02d", minutes, seconds));
     }
 }

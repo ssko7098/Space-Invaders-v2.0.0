@@ -72,12 +72,7 @@ public class Enemy implements GameObject, Renderable {
         if((this.position.getY()+this.image.getHeight())>=engine.getPlayer().getPosition().getY()){
             engine.getPlayer().takeDamage(Integer.MAX_VALUE);
         }
-
-        /*
-        Logic TBD
-         */
-
-        if(!isAlive() && !counted) {
+        else if(!isAlive() && !counted) {
             int points = 0;
             if(projectileStrategy.getStrategy().equals("slow_straight")) {
                 points = 3;

@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import invaders.entities.EntityView;
@@ -58,11 +59,13 @@ public class GameWindow {
 
         Label timerLabel = new Label();
         timerLabel.setTextFill(Paint.valueOf("white"));
+        timerLabel.setFont(new Font(20));
         timer.attach(new TimerObserver(timer, timerLabel));
 //        pane.getChildren().add(timerLabel);
 
         Label scoreLabel = new Label();
         scoreLabel.setTextFill(Paint.valueOf("white"));
+        scoreLabel.setFont(new Font(20));
         score.attach(new ScoreObserver(score, scoreLabel));
 //        pane.getChildren().add(scoreLabel);
 

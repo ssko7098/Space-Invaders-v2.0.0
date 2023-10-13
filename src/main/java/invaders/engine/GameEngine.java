@@ -83,7 +83,7 @@ public class GameEngine {
 	 */
 	public void update(){
 		counter+=1;
-		timer.setTimer(timer.getTimer() + 0.017);
+		timer.setTimer(timer.getTimer() + 0.0085);
 
 		movePlayer();
 
