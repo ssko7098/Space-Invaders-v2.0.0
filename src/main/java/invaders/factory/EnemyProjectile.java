@@ -3,6 +3,7 @@ package invaders.factory;
 import invaders.engine.GameEngine;
 import invaders.physics.Collider;
 import invaders.physics.Vector2D;
+import invaders.rendering.Renderable;
 import invaders.strategy.ProjectileStrategy;
 import javafx.scene.image.Image;
 
@@ -22,17 +23,20 @@ public class EnemyProjectile extends Projectile{
         if(this.getPosition().getY()>= model.getGameHeight() - this.getImage().getHeight()){
             this.takeDamage(1);
         }
-        else if(!isAlive() && !counted) {
-            int points = 0;
-            if(strategy.getStrategy().equals("slow_straight")) {
-                points = 1;
-            }
-            else if(strategy.getStrategy().equals("fast_straight")) {
-                points = 2;
-            }
 
-            model.getScore().addScore(points);
-            counted = true;
+        for(Renderable renderable : model.getRenderables()) {
+            if(!isAlive() && !counted && this.isColliding(renderable) && renderable.getRenderableObjectName().equals("PlayerProjectile")) {
+                int points = 0;
+                if(strategy.getStrategy().equals("slow_straight")) {
+                    points = 1;
+                }
+                else if(strategy.getStrategy().equals("fast_straight")) {
+                    points = 2;
+                }
+
+                model.getScore().addScore(points);
+                counted = true;
+            }
         }
 
     }

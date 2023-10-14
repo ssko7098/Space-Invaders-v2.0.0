@@ -61,13 +61,11 @@ public class GameWindow {
         timerLabel.setTextFill(Paint.valueOf("white"));
         timerLabel.setFont(new Font(20));
         timer.attach(new TimerObserver(timer, timerLabel));
-//        pane.getChildren().add(timerLabel);
 
         Label scoreLabel = new Label();
         scoreLabel.setTextFill(Paint.valueOf("white"));
         scoreLabel.setFont(new Font(20));
         score.attach(new ScoreObserver(score, scoreLabel));
-//        pane.getChildren().add(scoreLabel);
 
         hbox.getChildren().addAll(scoreLabel, timerLabel);
         pane.getChildren().add(hbox);
