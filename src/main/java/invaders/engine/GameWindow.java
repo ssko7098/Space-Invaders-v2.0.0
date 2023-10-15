@@ -7,10 +7,12 @@ import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
 import invaders.observer.*;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -38,7 +40,7 @@ public class GameWindow {
     private double yViewportOffset = 0.0;
     // private static final double VIEWPORT_MARGIN = 280.0;
 
-    private Score score = new Score();
+    private Score score;
     private Timer timer;
 
 	public GameWindow(GameEngine model){
@@ -49,13 +51,19 @@ public class GameWindow {
         this.score = model.getScore();
 
         pane = new Pane();
-        scene = new Scene(pane, width, height);
+        scene = new Scene(pane, width, height + 50);
         this.background = new SpaceBackground(model, pane);
 
-        HBox hbox = new HBox();
-        hbox.setSpacing(100);
-        hbox.setMinHeight(50);
-        hbox.setPadding(new Insets(20, 0, 0, 100));
+        VBox bottomBar = new VBox();
+        bottomBar.setLayoutY(height - 30);
+
+        HBox labels = new HBox();
+        labels.setSpacing(70);
+        labels.setPadding(new Insets(20, 0, 0, 50));
+
+        HBox buttons = new HBox();
+        buttons.setSpacing(70);
+        buttons.setPadding(new Insets(20, 0, 0, 50));
 
         Label timerLabel = new Label();
         timerLabel.setTextFill(Paint.valueOf("white"));
@@ -67,25 +75,29 @@ public class GameWindow {
         scoreLabel.setFont(new Font(20));
         score.attach(new ScoreObserver(score, scoreLabel));
 
-        hbox.getChildren().addAll(scoreLabel, timerLabel);
-        pane.getChildren().add(hbox);
+        Button save = new Button();
+        save.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                //TODO
+            }
+        });
+        save.setText("SAVE");
+        save.setFocusTraversable(false);
 
-//        HBox hbox = new HBox();
-//        hbox.setSpacing(100);
-//        hbox.setPadding(new Insets(0, 0, 0, 100));
-//
-//        Button save = new Button();
-//        save.setText("SAVE");
-//        save.setMinHeight(50);
-//        save.setMinWidth(100);
-//
-//        Button redo = new Button();
-//        redo.setText("REDO");
-//        redo.setMinHeight(50);
-//        redo.setMinWidth(100);
-//
-//        hbox.getChildren().addAll(save, redo);
-//        pane.getChildren().add(hbox);
+        Button redo = new Button();
+        redo.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                //TODO
+            }
+        });
+        redo.setText("REDO");
+        redo.setFocusTraversable(false);
+
+        labels.getChildren().addAll(scoreLabel, timerLabel, save, redo);
+        bottomBar.getChildren().addAll(labels);
+        pane.getChildren().add(bottomBar);
 
         KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model);
 
