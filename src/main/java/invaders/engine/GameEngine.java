@@ -12,6 +12,8 @@ import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.entities.Player;
+import invaders.memento.Caretaker;
+import invaders.memento.Memento;
 import invaders.observer.Observer;
 import invaders.observer.Score;
 import invaders.observer.Subject;
@@ -43,6 +45,8 @@ public class GameEngine {
 	private Score score = new Score();
 	private Timer timer = new Timer();
 
+	Caretaker caretaker;
+
 	public GameEngine(String config){
 		// Read the config here
 		ConfigReader.parse(config);
@@ -55,6 +59,7 @@ public class GameEngine {
 		this.player = new Player(ConfigReader.getPlayerInfo());
 		renderables.add(player);
 
+		this.caretaker = new Caretaker();
 
 		Director director = new Director();
 		BunkerBuilder bunkerBuilder = new BunkerBuilder();
@@ -175,6 +180,7 @@ public class GameEngine {
 
 	public boolean shootPressed(){
 		if(counter>45 && player.isAlive()){
+			caretaker.setMemento(saveState());
 			Projectile projectile = player.shoot();
 			gameObjects.add(projectile);
 			renderables.add(projectile);
@@ -209,4 +215,54 @@ public class GameEngine {
 	public Timer getTimer() {return timer;}
 
 	public Score getScore() {return score;}
+
+	public Caretaker getCaretaker() {return caretaker;}
+
+	public Memento saveState() {
+		return new Memento(this);
+	}
+
+	public void recoverState(Memento m) {
+		this.timer.setTimer(m.getTimer().getTimer());
+		this.score.setScore(m.getScore().getScore());
+
+		for(Renderable renderable: renderables) {
+			if(renderable.getRenderableObjectName().equals("Enemy")) {
+				renderable.takeDamage(Integer.MAX_VALUE);
+			}
+			else if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
+				renderable.takeDamage(Integer.MAX_VALUE);
+			}
+		}
+
+//		renderables.addAll(m.getEnemies());
+//		gameObjects.addAll(m.getEnemies());
+
+//		getPendingToAddRenderable().addAll(m.getEnemies());
+//		getPendingToAddGameObject().addAll(m.getEnemies());
+//
+//		getPendingToAddRenderable().addAll(m.getProjectiles());
+//		getPendingToAddGameObject().addAll(m.getProjectiles());
+	}
+
+	public void enemyCheat() {
+		for(Renderable renderable : renderables) {
+			if(renderable.getRenderableObjectName().equals("Enemy")) {
+				if(renderable.getImage().getUrl().endsWith("fast_alien.png")){
+					renderable.takeDamage(Integer.MAX_VALUE);
+				}
+			}
+		}
+	}
+
+	public void projectileCheat() {
+		for(Renderable renderable : renderables) {
+			if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
+				if(renderable.getImage().getUrl().endsWith("alien_shot_fast.png")){
+					renderable.takeDamage(Integer.MAX_VALUE);
+				}
+			}
+		}
+	}
+
 }

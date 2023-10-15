@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
+import invaders.memento.Caretaker;
 import invaders.observer.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -43,12 +44,15 @@ public class GameWindow {
     private Score score;
     private Timer timer;
 
+    private Caretaker caretaker;
+
 	public GameWindow(GameEngine model){
         this.model = model;
 		this.width =  model.getGameWidth();
         this.height = model.getGameHeight();
         this.timer = model.getTimer();
         this.score = model.getScore();
+        this.caretaker = model.getCaretaker();
 
         pane = new Pane();
         scene = new Scene(pane, width, height + 50);
@@ -61,10 +65,6 @@ public class GameWindow {
         labels.setSpacing(70);
         labels.setPadding(new Insets(20, 0, 0, 50));
 
-        HBox buttons = new HBox();
-        buttons.setSpacing(70);
-        buttons.setPadding(new Insets(20, 0, 0, 50));
-
         Label timerLabel = new Label();
         timerLabel.setTextFill(Paint.valueOf("white"));
         timerLabel.setFont(new Font(20));
@@ -75,27 +75,19 @@ public class GameWindow {
         scoreLabel.setFont(new Font(20));
         score.attach(new ScoreObserver(score, scoreLabel));
 
-        Button save = new Button();
-        save.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                //TODO
-            }
-        });
-        save.setText("SAVE");
-        save.setFocusTraversable(false);
 
         Button redo = new Button();
         redo.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //TODO
+                model.recoverState(caretaker.getMemento());
+                caretaker.setMemento(model.saveState());
             }
         });
         redo.setText("REDO");
         redo.setFocusTraversable(false);
 
-        labels.getChildren().addAll(scoreLabel, timerLabel, save, redo);
+        labels.getChildren().addAll(scoreLabel, timerLabel, redo);
         bottomBar.getChildren().addAll(labels);
         pane.getChildren().add(bottomBar);
 

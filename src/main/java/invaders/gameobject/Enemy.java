@@ -154,4 +154,12 @@ public class Enemy implements GameObject, Renderable {
         this.projectileStrategy = projectileStrategy;
     }
 
+    public ProjectileStrategy getProjectileStrategy() {
+        return projectileStrategy;
+    }
+
+    public Image getProjectileImage() {
+        return projectileImage;
+    }
+
 }

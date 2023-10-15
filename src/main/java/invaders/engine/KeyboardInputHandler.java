@@ -51,6 +51,12 @@ class KeyboardInputHandler {
         if (keyEvent.getCode().equals(KeyCode.RIGHT)) {
             right = true;
         }
+        if(keyEvent.getCode().equals(KeyCode.E)) {
+            model.enemyCheat();
+        }
+        if(keyEvent.getCode().equals(KeyCode.P)) {
+            model.projectileCheat();
+        }
 
         if (left) {
             model.leftPressed();
