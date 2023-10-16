@@ -35,6 +35,18 @@ public class Enemy implements GameObject, Renderable {
         this.pendingToDeleteEnemyProjectile = new ArrayList<>();
     }
 
+    public Enemy(Enemy enemy) {
+        this.position = new Vector2D(enemy.position.getX(), enemy.position.getY());
+        this.projectileFactory = enemy.projectileFactory;
+        this.enemyProjectile = enemy.enemyProjectile;
+        this.pendingToDeleteEnemyProjectile = enemy.pendingToDeleteEnemyProjectile;
+        this.image = enemy.image;
+        this.projectileStrategy = enemy.projectileStrategy;
+        this.projectileImage = enemy.projectileImage;
+        this.xVel = enemy.xVel;
+        this.lives = enemy.lives;
+    }
+
     @Override
     public void start() {}
 
@@ -152,14 +164,6 @@ public class Enemy implements GameObject, Renderable {
 
     public void setProjectileStrategy(ProjectileStrategy projectileStrategy) {
         this.projectileStrategy = projectileStrategy;
-    }
-
-    public ProjectileStrategy getProjectileStrategy() {
-        return projectileStrategy;
-    }
-
-    public Image getProjectileImage() {
-        return projectileImage;
     }
 
 }

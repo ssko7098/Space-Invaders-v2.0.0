@@ -1,8 +1,5 @@
 package invaders.memento;
 
-import invaders.ConfigReader;
-import invaders.builder.Director;
-import invaders.builder.EnemyBuilder;
 import invaders.engine.GameEngine;
 import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
@@ -11,9 +8,7 @@ import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.observer.Score;
 import invaders.observer.Timer;
-import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,35 +26,16 @@ public class Memento {
         this.score = new Score(engine.getScore());
         this.timer = new Timer(engine.getTimer());
 
-        Director director = new Director();
-        EnemyBuilder enemyBuilder = new EnemyBuilder();
+        for(int i=0; i<engine.getRenderables().size(); i++) {
+            Renderable renderable = engine.getRenderables().get(i);
 
-        for(Renderable renderable : engine.getRenderables()) {
             if(renderable.getRenderableObjectName().equals("Enemy")) {
                 Enemy enemy = (Enemy) renderable;
-                Enemy newEnemy = new Enemy(renderable.getPosition());
-                newEnemy.setImage(renderable.getImage());
-                newEnemy.setProjectileStrategy(enemy.getProjectileStrategy());
-                newEnemy.setProjectileImage(enemy.getProjectileImage());
+                Enemy newEnemy = new Enemy(enemy);
 
                 enemies.add(newEnemy);
             }
         }
-
-//        for(Object eachEnemyInfo : ConfigReader.getEnemiesInfo()) {
-//            Enemy enemy = director.constructEnemy(engine, enemyBuilder, (JSONObject) eachEnemyInfo);
-//
-//            for(Renderable renderable : engine.getRenderables()) {
-//                if(renderable.getRenderableObjectName().equals("Enemy")) {
-//                    enemy.setPosition(renderable.getPosition());
-//                    Projectile p = pFactory.createProjectile(new Vector2D(enemy.getPosition().getX() + enemy.getImage().getWidth() / 2,
-//                            enemy.getPosition().getY() + enemy.getImage().getHeight() + 2), enemy.getProjectileStrategy(), enemy.getProjectileImage());
-//
-//                    enemies.add(enemy);
-//                    projectiles.add(p);
-//                }
-//            }
-//        }
     }
 
     public Score getScore() {

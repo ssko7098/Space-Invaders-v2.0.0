@@ -226,23 +226,24 @@ public class GameEngine {
 		this.timer.setTimer(m.getTimer().getTimer());
 		this.score.setScore(m.getScore().getScore());
 
-		for(Renderable renderable: renderables) {
-			if(renderable.getRenderableObjectName().equals("Enemy")) {
-				renderable.takeDamage(Integer.MAX_VALUE);
+		int i=0;
+		int j=0;
+
+		while(i< renderables.size() && j<m.getEnemies().size()) {
+			Enemy newEnemy = m.getEnemies().get(j);
+
+			if(renderables.get(i).getRenderableObjectName().equals("Enemy")) {
+				Enemy oldEnemy = (Enemy) renderables.get(i);
+				oldEnemy.setLives((int) newEnemy.getHealth());
+				oldEnemy.getPosition().setX(newEnemy.getPosition().getX());
+				oldEnemy.getPosition().setY(newEnemy.getPosition().getY());
+
+				j++;
 			}
-			else if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
-				renderable.takeDamage(Integer.MAX_VALUE);
-			}
+
+			i++;
 		}
 
-//		renderables.addAll(m.getEnemies());
-//		gameObjects.addAll(m.getEnemies());
-
-//		getPendingToAddRenderable().addAll(m.getEnemies());
-//		getPendingToAddGameObject().addAll(m.getEnemies());
-//
-//		getPendingToAddRenderable().addAll(m.getProjectiles());
-//		getPendingToAddGameObject().addAll(m.getProjectiles());
 	}
 
 	public void enemyCheat() {
