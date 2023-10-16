@@ -1,6 +1,7 @@
 package invaders.memento;
 
 import invaders.engine.GameEngine;
+import invaders.factory.EnemyProjectile;
 import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
@@ -8,6 +9,7 @@ import invaders.gameobject.Enemy;
 import invaders.gameobject.GameObject;
 import invaders.observer.Score;
 import invaders.observer.Timer;
+import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 
 import java.util.ArrayList;
@@ -34,6 +36,13 @@ public class Memento {
                 Enemy newEnemy = new Enemy(enemy);
 
                 enemies.add(newEnemy);
+            }
+
+            else if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
+                EnemyProjectile oldP = (EnemyProjectile) renderable;
+                Projectile newP = new EnemyProjectile(oldP);
+
+                projectiles.add(newP);
             }
         }
     }

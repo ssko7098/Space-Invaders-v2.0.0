@@ -1,6 +1,7 @@
 package invaders.gameobject;
 
 import invaders.engine.GameEngine;
+import invaders.factory.EnemyProjectile;
 import invaders.factory.EnemyProjectileFactory;
 import invaders.factory.Projectile;
 import invaders.factory.ProjectileFactory;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Enemy implements GameObject, Renderable {
@@ -164,6 +166,18 @@ public class Enemy implements GameObject, Renderable {
 
     public void setProjectileStrategy(ProjectileStrategy projectileStrategy) {
         this.projectileStrategy = projectileStrategy;
+    }
+
+    public ProjectileStrategy getProjectileStrategy() {
+        return projectileStrategy;
+    }
+
+    public List<Projectile> getEnemyProjectiles() {
+        return enemyProjectile;
+    }
+
+    public Image getProjectileImage() {
+        return projectileImage;
     }
 
 }

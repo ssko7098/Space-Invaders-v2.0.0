@@ -229,7 +229,7 @@ public class GameEngine {
 		int i=0;
 		int j=0;
 
-		while(i< renderables.size() && j<m.getEnemies().size()) {
+		while(i< renderables.size() && j < m.getEnemies().size()) {
 			Enemy newEnemy = m.getEnemies().get(j);
 
 			if(renderables.get(i).getRenderableObjectName().equals("Enemy")) {
@@ -242,6 +242,23 @@ public class GameEngine {
 			}
 
 			i++;
+		}
+
+		int x=0;
+		int y=0;
+
+		while(x < renderables.size() && y < m.getProjectiles().size()) {
+			Projectile newP = m.getProjectiles().get(y);
+
+			if(renderables.get(x).getRenderableObjectName().equals("EnemyProjectile")) {
+				Projectile oldP = (Projectile) renderables.get(x);
+				oldP.getPosition().setX(newP.getPosition().getX());
+				oldP.getPosition().setY(newP.getPosition().getY());
+
+				y++;
+			}
+
+			x++;
 		}
 
 	}

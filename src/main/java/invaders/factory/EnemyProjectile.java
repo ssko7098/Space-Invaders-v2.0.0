@@ -16,6 +16,11 @@ public class EnemyProjectile extends Projectile{
         this.strategy = strategy;
     }
 
+    public EnemyProjectile(EnemyProjectile newP) {
+        super(new Vector2D(newP.getPosition().getX(), newP.getPosition().getY()), newP.getImage());
+        this.strategy = newP.strategy;
+    }
+
     @Override
     public void update(GameEngine model) {
         strategy.update(this);
