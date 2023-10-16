@@ -81,7 +81,7 @@ public class GameWindow {
             @Override
             public void handle(MouseEvent event) {
                 model.recoverState(caretaker.getMemento());
-                caretaker.setMemento(model.saveState());
+//                caretaker.setMemento(model.saveState());
             }
         });
         redo.setText("REDO");

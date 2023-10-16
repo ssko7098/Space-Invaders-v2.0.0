@@ -180,4 +180,12 @@ public class Enemy implements GameObject, Renderable {
         return projectileImage;
     }
 
+    public void setSpeed(int xVel) {
+        this.xVel = xVel;
+    }
+
+    public int getSpeed() {
+        return xVel;
+    }
+
 }

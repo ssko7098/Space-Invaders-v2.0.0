@@ -19,14 +19,17 @@ public class Memento {
 
     private Score score;
     private Timer timer;
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-    private ArrayList<Projectile> projectiles = new ArrayList<>();
-
-    private ProjectileFactory pFactory = new EnemyProjectileFactory();
+    private ArrayList<Enemy> enemies;
+    private ArrayList<Projectile> projectiles;
+    private ArrayList<Renderable> existingProjectiles;
 
     public Memento(GameEngine engine) {
         this.score = new Score(engine.getScore());
         this.timer = new Timer(engine.getTimer());
+        this.enemies = new ArrayList<>();
+        this.projectiles = new ArrayList<>();
+        this.existingProjectiles = new ArrayList<>();
+
 
         for(int i=0; i<engine.getRenderables().size(); i++) {
             Renderable renderable = engine.getRenderables().get(i);
@@ -43,6 +46,7 @@ public class Memento {
                 Projectile newP = new EnemyProjectile(oldP);
 
                 projectiles.add(newP);
+                existingProjectiles.add(renderable);
             }
         }
     }
@@ -61,6 +65,10 @@ public class Memento {
 
     public List<Projectile> getProjectiles() {
         return projectiles;
+    }
+
+    public List<Renderable> getExistingProjectiles() {
+        return existingProjectiles;
     }
 
 }

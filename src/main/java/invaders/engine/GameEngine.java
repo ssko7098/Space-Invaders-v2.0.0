@@ -7,6 +7,7 @@ import invaders.ConfigReader;
 import invaders.builder.BunkerBuilder;
 import invaders.builder.Director;
 import invaders.builder.EnemyBuilder;
+import invaders.factory.EnemyProjectile;
 import invaders.factory.Projectile;
 import invaders.gameobject.Bunker;
 import invaders.gameobject.Enemy;
@@ -234,6 +235,7 @@ public class GameEngine {
 
 			if(renderables.get(i).getRenderableObjectName().equals("Enemy")) {
 				Enemy oldEnemy = (Enemy) renderables.get(i);
+				oldEnemy.setSpeed(newEnemy.getSpeed());
 				oldEnemy.setLives((int) newEnemy.getHealth());
 				oldEnemy.getPosition().setX(newEnemy.getPosition().getX());
 				oldEnemy.getPosition().setY(newEnemy.getPosition().getY());
@@ -244,14 +246,24 @@ public class GameEngine {
 			i++;
 		}
 
+		// check whether a new projectile has been created in the time since a state was saved
+		for(Renderable renderable : renderables) {
+			if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
+				if(!m.getExistingProjectiles().contains(renderable)) {
+					renderable.takeDamage(Integer.MAX_VALUE);
+				}
+			}
+		}
+
 		int x=0;
 		int y=0;
 
-		while(x < renderables.size() && y < m.getProjectiles().size()) {
+		while(x < m.getExistingProjectiles().size() && y < m.getProjectiles().size()) {
 			Projectile newP = m.getProjectiles().get(y);
 
-			if(renderables.get(x).getRenderableObjectName().equals("EnemyProjectile")) {
-				Projectile oldP = (Projectile) renderables.get(x);
+			if(m.getExistingProjectiles().get(x).getRenderableObjectName().equals("EnemyProjectile")) {
+				Projectile oldP = (Projectile) m.getExistingProjectiles().get(x);
+
 				oldP.getPosition().setX(newP.getPosition().getX());
 				oldP.getPosition().setY(newP.getPosition().getY());
 
