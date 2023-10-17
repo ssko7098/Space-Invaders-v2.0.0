@@ -16,6 +16,16 @@ public class Bunker implements GameObject, Renderable {
     private Image image;
     private BunkerState state = new GreenState(this);
 
+    public Bunker() {
+        // default constructor
+    }
+
+    //Copy constructor
+    public Bunker(Bunker bunker) {
+        this.lives = bunker.lives;
+        this.image = bunker.image;
+        this.state = bunker.state;
+    }
 
     @Override
     public void start() {}

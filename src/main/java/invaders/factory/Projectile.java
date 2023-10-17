@@ -62,4 +62,8 @@ public abstract class Projectile implements Renderable, GameObject {
 
     public abstract String getStrategy();
 
+    public void setHealth(int health) {
+        this.lives = health;
+    }
+
 }

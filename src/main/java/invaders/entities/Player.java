@@ -39,6 +39,13 @@ public class Player implements Moveable, Renderable {
 
     }
 
+    //Copy constructor
+    public Player(Player newPlayer) {
+        this.position = new Vector2D(newPlayer.getPosition().getX(), newPlayer.getPosition().getY());
+        this.image = newPlayer.image;
+        this.health = newPlayer.health;
+    }
+
     @Override
     public void takeDamage(double amount) {
         this.health -= amount;
@@ -106,6 +113,10 @@ public class Player implements Moveable, Renderable {
     @Override
     public String getRenderableObjectName() {
         return "Player";
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 
 }

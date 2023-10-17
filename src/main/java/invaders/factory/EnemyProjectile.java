@@ -20,6 +20,7 @@ public class EnemyProjectile extends Projectile{
         super(new Vector2D(newP.getPosition().getX(), newP.getPosition().getY()), newP.getImage());
         this.strategy = newP.strategy;
         this.counted = newP.counted;
+        super.setHealth((int) newP.getHealth());
     }
 
     @Override

@@ -227,6 +227,7 @@ public class GameEngine {
 		this.timer.setTimer(m.getTimer().getTimer());
 		this.score.setScore(m.getScore().getScore());
 
+		// restore the state of every enemy
 		int i=0;
 		int j=0;
 
@@ -247,25 +248,28 @@ public class GameEngine {
 		}
 
 		// check whether a new projectile has been created in the time since a state was saved
+		// if it has, remove it.
 		for(Renderable renderable : renderables) {
-			if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
+			if(renderable.getRenderableObjectName().equals("EnemyProjectile") || renderable.getRenderableObjectName().equals("PlayerProjectile")) {
 				if(!m.getExistingProjectiles().contains(renderable)) {
 					renderable.takeDamage(Integer.MAX_VALUE);
 				}
 			}
 		}
 
+		// now restore the state of every enemy's projectile
 		int x=0;
 		int y=0;
 
-		while(x < m.getExistingProjectiles().size() && y < m.getProjectiles().size()) {
-			Projectile newP = m.getProjectiles().get(y);
+		while(x < m.getExistingProjectiles().size() && y < m.getEnemyProjectiles().size()) {
+			Projectile newP = m.getEnemyProjectiles().get(y);
 
 			if(m.getExistingProjectiles().get(x).getRenderableObjectName().equals("EnemyProjectile")) {
 				Projectile oldP = (Projectile) m.getExistingProjectiles().get(x);
 
 				oldP.getPosition().setX(newP.getPosition().getX());
 				oldP.getPosition().setY(newP.getPosition().getY());
+				oldP.setHealth((int) newP.getHealth());
 
 				y++;
 			}
@@ -273,6 +277,50 @@ public class GameEngine {
 			x++;
 		}
 
+		//Now restore the state of the player
+		player.getPosition().setX(m.getPlayer().getPosition().getX());
+		player.getPosition().setY(m.getPlayer().getPosition().getY());
+		player.setHealth((int) m.getPlayer().getHealth());
+
+		// now restore the state of the player's projectiles
+		int a=0;
+		int b=0;
+
+		while(a < m.getExistingProjectiles().size() && b < m.getPlayerProjectiles().size()) {
+			Projectile newP = m.getPlayerProjectiles().get(b);
+
+			if(m.getExistingProjectiles().get(a).getRenderableObjectName().equals("PlayerProjectile")) {
+				Projectile oldP = (Projectile) m.getExistingProjectiles().get(a);
+
+				oldP.getPosition().setX(newP.getPosition().getX());
+				oldP.getPosition().setY(newP.getPosition().getY());
+				oldP.setHealth((int) newP.getHealth());
+
+				b++;
+			}
+
+			a++;
+		}
+
+		//Now restore the bunker states
+		int c=0;
+		int d=0;
+
+		while(d < m.getBunkers().size() && a < renderables.size()) {
+			Bunker newB = m.getBunkers().get(d);
+
+			if(renderables.get(c).getRenderableObjectName().equals("Bunker")) {
+				Bunker oldB = (Bunker) renderables.get(c);
+
+				oldB.setState(newB.getState());
+				oldB.setImage(newB.getImage());
+				oldB.setLives((int) newB.getHealth());
+
+				d++;
+			}
+
+			c++;
+		}
 	}
 
 	public void enemyCheat() {

@@ -15,7 +15,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameEngine model = new GameEngine("src/main/resources/config_easy.json");
+        GameEngine model = new GameEngine("src/main/resources/config_hard.json");
         GameWindow window = new GameWindow(model);
         window.run();
 
