@@ -1,5 +1,8 @@
 package invaders;
 
+import invaders.singleton.EasyLevel;
+import invaders.singleton.HardLevel;
+import invaders.singleton.MediumLevel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import invaders.engine.GameEngine;
@@ -15,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameEngine model = new GameEngine("src/main/resources/config_hard.json");
+        GameEngine model = new GameEngine(HardLevel.getInstance().getConfigPath());
         GameWindow window = new GameWindow(model);
         window.run();
 

@@ -325,9 +325,10 @@ public class GameEngine {
 
 	public void enemyCheat() {
 		for(Renderable renderable : renderables) {
-			if(renderable.getRenderableObjectName().equals("Enemy")) {
+			if(renderable.getRenderableObjectName().equals("Enemy") && renderable.isAlive()) {
 				if(renderable.getImage().getUrl().endsWith("fast_alien.png")){
 					renderable.takeDamage(Integer.MAX_VALUE);
+					score.addScore(4);
 				}
 			}
 		}
@@ -335,9 +336,10 @@ public class GameEngine {
 
 	public void projectileCheat() {
 		for(Renderable renderable : renderables) {
-			if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
+			if(renderable.getRenderableObjectName().equals("EnemyProjectile") && renderable.isAlive()) {
 				if(renderable.getImage().getUrl().endsWith("alien_shot_fast.png")){
 					renderable.takeDamage(Integer.MAX_VALUE);
+					score.addScore(2);
 				}
 			}
 		}
