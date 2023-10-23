@@ -395,6 +395,7 @@ public class GameEngine {
 		}
 
 		timer.setTimer(0);
+		score.setScore(0);
 	}
 
 }
