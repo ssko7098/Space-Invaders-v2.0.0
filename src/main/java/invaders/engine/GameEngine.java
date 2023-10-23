@@ -20,6 +20,7 @@ import invaders.observer.Score;
 import invaders.observer.Subject;
 import invaders.observer.Timer;
 import invaders.rendering.Renderable;
+import invaders.singleton.Difficulty;
 import org.json.simple.JSONObject;
 
 /**
@@ -46,11 +47,11 @@ public class GameEngine {
 	private Score score = new Score();
 	private Timer timer = new Timer();
 
-	Caretaker caretaker;
+	private Caretaker caretaker;
 
-	public GameEngine(String config){
+	public GameEngine(Difficulty difficulty){
 		// Read the config here
-		ConfigReader.parse(config);
+		ConfigReader.parse(difficulty.getConfigPath());
 
 		// Get game width and height
 		gameWidth = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("x")).intValue();
@@ -89,7 +90,10 @@ public class GameEngine {
 	 */
 	public void update(){
 		counter+=1;
-		timer.setTimer(timer.getTimer() + 0.0085);
+
+		if(player.isAlive()) {
+			timer.setTimer(timer.getTimer() + 0.0085);
+		}
 
 		movePlayer();
 
@@ -343,6 +347,54 @@ public class GameEngine {
 				}
 			}
 		}
+	}
+
+	public void endGame() {
+		for(Renderable renderable : renderables) {
+			if(renderable.getRenderableObjectName().equals("Bunker")) {
+				renderable.takeDamage(1);
+				renderable.takeDamage(1);
+				renderable.takeDamage(1);
+			}
+			else {
+				renderable.takeDamage(Integer.MAX_VALUE);
+			}
+		}
+	}
+
+	public void resetGame(Difficulty difficulty) {
+		// Read the config here
+		ConfigReader.parse(difficulty.getConfigPath());
+
+		// Get game width and height
+		gameWidth = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("x")).intValue();
+		gameHeight = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("y")).intValue();
+
+		//Get player info
+		this.player = new Player(ConfigReader.getPlayerInfo());
+		renderables.add(player);
+
+		this.caretaker = new Caretaker();
+
+		Director director = new Director();
+		BunkerBuilder bunkerBuilder = new BunkerBuilder();
+		//Get Bunkers info
+		for(Object eachBunkerInfo:ConfigReader.getBunkersInfo()){
+			Bunker bunker = director.constructBunker(bunkerBuilder, (JSONObject) eachBunkerInfo);
+			gameObjects.add(bunker);
+			renderables.add(bunker);
+		}
+
+
+		EnemyBuilder enemyBuilder = new EnemyBuilder();
+		//Get Enemy info
+		for(Object eachEnemyInfo:ConfigReader.getEnemiesInfo()){
+			Enemy enemy = director.constructEnemy(this,enemyBuilder,(JSONObject)eachEnemyInfo);
+			gameObjects.add(enemy);
+			renderables.add(enemy);
+		}
+
+		timer.setTimer(0);
 	}
 
 }

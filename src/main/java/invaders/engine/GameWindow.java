@@ -3,16 +3,21 @@ package invaders.engine;
 import java.util.List;
 import java.util.ArrayList;
 
+import invaders.App;
 import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
 import invaders.memento.Caretaker;
 import invaders.observer.*;
+import invaders.singleton.Difficulty;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -46,6 +51,9 @@ public class GameWindow {
 
     private Caretaker caretaker;
 
+    private Label timerLabel = new Label();
+    private Label scoreLabel = new Label();
+
 	public GameWindow(GameEngine model){
         this.model = model;
 		this.width =  model.getGameWidth();
@@ -65,12 +73,10 @@ public class GameWindow {
         labels.setSpacing(70);
         labels.setPadding(new Insets(20, 0, 0, 50));
 
-        Label timerLabel = new Label();
         timerLabel.setTextFill(Paint.valueOf("white"));
         timerLabel.setFont(new Font(20));
         timer.attach(new TimerObserver(timer, timerLabel));
 
-        Label scoreLabel = new Label();
         scoreLabel.setTextFill(Paint.valueOf("white"));
         scoreLabel.setFont(new Font(20));
         score.attach(new ScoreObserver(score, scoreLabel));
@@ -86,7 +92,27 @@ public class GameWindow {
         redo.setText("REDO");
         redo.setFocusTraversable(false);
 
-        labels.getChildren().addAll(scoreLabel, timerLabel, redo);
+        //TODO need to figure out how to reset the game on ActionEvent
+        ObservableList<String> difficulties = FXCollections.observableArrayList(
+                "Easy",
+                        "Medium",
+                        "Hard"
+        );
+
+        ComboBox<String> comboBox = new ComboBox<>(FXCollections.observableArrayList(difficulties));
+        comboBox.setValue("Easy");
+        comboBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Difficulty.getInstance().setDifficulty(comboBox.getValue());
+                //TODO reset GameEngine
+                model.endGame();
+                model.resetGame((Difficulty.getInstance()));
+            }
+        });
+        comboBox.setFocusTraversable(false);
+
+        labels.getChildren().addAll(scoreLabel, timerLabel, redo, comboBox);
         bottomBar.getChildren().addAll(labels);
         pane.getChildren().add(bottomBar);
 
@@ -156,6 +182,37 @@ public class GameWindow {
         model.getPendingToRemoveRenderable().clear();
 
         entityViews.removeIf(EntityView::isMarkedForDelete);
+
+        if(!model.getPlayer().isAlive()) {
+            model.endGame();
+            Label label = new Label();
+            label.setText("GAME OVER");
+            label.setFont(new Font("Arial", 30));
+            label.setMinWidth(width);
+            label.setMinHeight(height);
+            label.setAlignment(Pos.CENTER);
+            label.setTextFill(Paint.valueOf("WHITE"));
+            pane.getChildren().add(label);
+        }
+//        else {
+//            for(Renderable renderable : model.getRenderables()) {
+//                if(renderable.getRenderableObjectName().equals("Enemy")) {
+//                    if(renderable.isAlive()) {
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            model.endGame();
+//            Label label = new Label();
+//            label.setText("PLAYER WINS!");
+//            label.setFont(new Font("Arial", 30));
+//            label.setMinWidth(width);
+//            label.setMinHeight(height);
+//            label.setAlignment(Pos.CENTER);
+//            label.setTextFill(Paint.valueOf("WHITE"));
+//            pane.getChildren().add(label);
+//        }
 
     }
 
