@@ -19,7 +19,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameEngine model = new GameEngine(Difficulty.getInstance());
+        GameEngine model = new GameEngine(Difficulty.getInstance().getConfigPath());
         GameWindow window = new GameWindow(model);
         window.run();
 

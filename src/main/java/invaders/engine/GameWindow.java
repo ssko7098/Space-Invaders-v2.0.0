@@ -107,7 +107,8 @@ public class GameWindow {
                 Difficulty.getInstance().setDifficulty(comboBox.getValue());
                 //TODO reset GameEngine
                 model.endGame();
-                model.resetGame((Difficulty.getInstance()));
+                model.resetGame((Difficulty.getInstance().getConfigPath()));
+                caretaker = model.getCaretaker();
             }
         });
         comboBox.setFocusTraversable(false);

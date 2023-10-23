@@ -49,9 +49,9 @@ public class GameEngine {
 
 	private Caretaker caretaker;
 
-	public GameEngine(Difficulty difficulty){
+	public GameEngine(String config){
 		// Read the config here
-		ConfigReader.parse(difficulty.getConfigPath());
+		ConfigReader.parse(config);
 
 		// Get game width and height
 		gameWidth = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("x")).intValue();
@@ -362,9 +362,9 @@ public class GameEngine {
 		}
 	}
 
-	public void resetGame(Difficulty difficulty) {
+	public void resetGame(String config) {
 		// Read the config here
-		ConfigReader.parse(difficulty.getConfigPath());
+		ConfigReader.parse(config);
 
 		// Get game width and height
 		gameWidth = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("x")).intValue();
