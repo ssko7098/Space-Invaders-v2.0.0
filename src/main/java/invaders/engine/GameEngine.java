@@ -364,6 +364,9 @@ public class GameEngine {
 	}
 
 	public void resetGame(String config) {
+		endGame();
+
+
 		// Read the config here
 		ConfigReader.parse(config);
 
@@ -397,6 +400,7 @@ public class GameEngine {
 
 		timer.setTimer(0);
 		score.setScore(0);
+		counter = 45;
 	}
 
 }

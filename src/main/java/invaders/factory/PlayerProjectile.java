@@ -1,6 +1,7 @@
 package invaders.factory;
 
 import invaders.engine.GameEngine;
+import invaders.entities.EntityView;
 import invaders.physics.Vector2D;
 import invaders.strategy.ProjectileStrategy;
 import javafx.scene.image.Image;
@@ -28,6 +29,11 @@ public class PlayerProjectile extends Projectile {
 
         if(this.getPosition().getY() <= this.getImage().getHeight()){
             this.takeDamage(1);
+        }
+
+        if(!this.isAlive()){
+            model.getPendingToRemoveGameObject().add(this);
+            model.getPendingToRemoveRenderable().add(this);
         }
     }
     @Override

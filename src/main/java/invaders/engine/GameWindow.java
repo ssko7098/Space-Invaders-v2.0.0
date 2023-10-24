@@ -7,6 +7,7 @@ import invaders.App;
 import invaders.ConfigReader;
 import invaders.entities.EntityViewImpl;
 import invaders.entities.SpaceBackground;
+import invaders.gameobject.GameObject;
 import invaders.memento.Caretaker;
 import invaders.observer.*;
 import invaders.singleton.Difficulty;
@@ -112,7 +113,6 @@ public class GameWindow {
             @Override
             public void handle(ActionEvent event) {
                 Difficulty.getInstance().setDifficulty(comboBox.getValue());
-                model.endGame();
                 model.resetGame((Difficulty.getInstance().getConfigPath()));
                 endGameLabel.setText("");
                 gameOver = false;
