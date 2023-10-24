@@ -54,6 +54,9 @@ public class GameWindow {
     private Label timerLabel = new Label();
     private Label scoreLabel = new Label();
 
+    private boolean gameOver = false;
+    private Label endGameLabel = new Label();
+
 	public GameWindow(GameEngine model){
         this.model = model;
 		this.width =  model.getGameWidth();
@@ -86,13 +89,17 @@ public class GameWindow {
         redo.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                model.recoverState(caretaker.getMemento());
+                try{
+                    model.recoverState(caretaker.getMemento());
+                }catch(NullPointerException e) {
+                    System.out.println("You have no states currently saved");
+                }
+                caretaker.setMemento(null);
             }
         });
         redo.setText("REDO");
         redo.setFocusTraversable(false);
 
-        //TODO need to figure out how to reset the game on ActionEvent
         ObservableList<String> difficulties = FXCollections.observableArrayList(
                 "Easy",
                         "Medium",
@@ -105,9 +112,10 @@ public class GameWindow {
             @Override
             public void handle(ActionEvent event) {
                 Difficulty.getInstance().setDifficulty(comboBox.getValue());
-                //TODO reset GameEngine
                 model.endGame();
                 model.resetGame((Difficulty.getInstance().getConfigPath()));
+                endGameLabel.setText("");
+                gameOver = false;
                 caretaker = model.getCaretaker();
             }
         });
@@ -122,6 +130,12 @@ public class GameWindow {
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
+        endGameLabel.setFont(new Font("Arial", 30));
+        endGameLabel.setMinWidth(width);
+        endGameLabel.setMinHeight(height);
+        endGameLabel.setAlignment(Pos.CENTER);
+        endGameLabel.setTextFill(Paint.valueOf("WHITE"));
+        pane.getChildren().add(endGameLabel);
     }
 
 	public void run() {
@@ -184,36 +198,30 @@ public class GameWindow {
 
         entityViews.removeIf(EntityView::isMarkedForDelete);
 
-        if(!model.getPlayer().isAlive()) {
-            model.endGame();
-            Label label = new Label();
-            label.setText("GAME OVER");
-            label.setFont(new Font("Arial", 30));
-            label.setMinWidth(width);
-            label.setMinHeight(height);
-            label.setAlignment(Pos.CENTER);
-            label.setTextFill(Paint.valueOf("WHITE"));
-            pane.getChildren().add(label);
+        if(!model.getPlayer().isAlive() && endGameLabel.getText().isEmpty()) {
+            gameOver = true;
+            endGameLabel.setText("GAME OVER");
         }
-//        else {
-//            for(Renderable renderable : model.getRenderables()) {
-//                if(renderable.getRenderableObjectName().equals("Enemy")) {
-//                    if(renderable.isAlive()) {
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            model.endGame();
-//            Label label = new Label();
-//            label.setText("PLAYER WINS!");
-//            label.setFont(new Font("Arial", 30));
-//            label.setMinWidth(width);
-//            label.setMinHeight(height);
-//            label.setAlignment(Pos.CENTER);
-//            label.setTextFill(Paint.valueOf("WHITE"));
-//            pane.getChildren().add(label);
-//        }
+
+        else if(model.getPlayer().isAlive() && endGameLabel.getText().isEmpty()) {
+            boolean noEnemiesLeft = true;
+            for(Renderable renderable : model.getRenderables()) {
+                if(renderable.getRenderableObjectName().equals("Enemy")) {
+                    if(renderable.isAlive()) {
+                        noEnemiesLeft = false;
+                    }
+                }
+            }
+
+            if(noEnemiesLeft) {
+                gameOver = true;
+                endGameLabel.setText("PLAYER WINS!");
+            }
+        }
+
+        if(gameOver) {
+            model.endGame();
+        }
 
     }
 

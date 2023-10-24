@@ -7,6 +7,7 @@ import invaders.ConfigReader;
 import invaders.builder.BunkerBuilder;
 import invaders.builder.Director;
 import invaders.builder.EnemyBuilder;
+import invaders.entities.EntityView;
 import invaders.factory.EnemyProjectile;
 import invaders.factory.Projectile;
 import invaders.gameobject.Bunker;
