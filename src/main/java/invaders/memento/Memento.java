@@ -20,7 +20,6 @@ public class Memento {
     private Timer timer;
     private ArrayList<Enemy> enemies;
     private ArrayList<Projectile> enemyProjectiles;
-    private ArrayList<Projectile> playerProjectiles;
     private ArrayList<Renderable> existingProjectiles;
     private ArrayList<Bunker> bunkers;
     private Player player;
@@ -30,7 +29,6 @@ public class Memento {
         this.timer = new Timer(engine.getTimer());
         this.enemies = new ArrayList<>();
         this.enemyProjectiles = new ArrayList<>();
-        this.playerProjectiles = new ArrayList<>();
         this.existingProjectiles = new ArrayList<>();
         this.player = new Player(engine.getPlayer());
         this.bunkers = new ArrayList<>();
@@ -54,10 +52,6 @@ public class Memento {
             }
 
             else if(renderable.getRenderableObjectName().equals("PlayerProjectile")) {
-                PlayerProjectile oldP = (PlayerProjectile) renderable;
-                Projectile newP = new PlayerProjectile(oldP);
-
-                playerProjectiles.add(newP);
                 existingProjectiles.add(renderable);
             }
 
@@ -92,10 +86,6 @@ public class Memento {
 
     public Player getPlayer() {
         return player;
-    }
-
-    public List<Projectile> getPlayerProjectiles() {
-        return playerProjectiles;
     }
 
     public List<Bunker> getBunkers() {

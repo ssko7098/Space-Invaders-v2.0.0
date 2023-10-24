@@ -48,7 +48,7 @@ public class GameEngine {
 	private Score score = new Score();
 	private Timer timer = new Timer();
 
-	private Caretaker caretaker;
+	private boolean playerHasShot = false;
 
 	public GameEngine(String config){
 		// Read the config here
@@ -61,8 +61,6 @@ public class GameEngine {
 		//Get player info
 		this.player = new Player(ConfigReader.getPlayerInfo());
 		renderables.add(player);
-
-		this.caretaker = new Caretaker();
 
 		Director director = new Director();
 		BunkerBuilder bunkerBuilder = new BunkerBuilder();
@@ -186,7 +184,7 @@ public class GameEngine {
 
 	public boolean shootPressed(){
 		if(counter>45 && player.isAlive()){
-			caretaker.setMemento(saveState());
+			playerHasShot = true;
 			Projectile projectile = player.shoot();
 			gameObjects.add(projectile);
 			renderables.add(projectile);
@@ -194,6 +192,14 @@ public class GameEngine {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean playerHasShot() {
+		return playerHasShot;
+	}
+
+	public void playerStoppedShooting() {
+		playerHasShot = false;
 	}
 
 	private void movePlayer(){
@@ -221,8 +227,6 @@ public class GameEngine {
 	public Timer getTimer() {return timer;}
 
 	public Score getScore() {return score;}
-
-	public Caretaker getCaretaker() {return caretaker;}
 
 	public Memento saveState() {
 		return new Memento(this);
@@ -255,8 +259,15 @@ public class GameEngine {
 		// check whether a new projectile has been created in the time since a state was saved
 		// if it has, remove it.
 		for(Renderable renderable : renderables) {
-			if(renderable.getRenderableObjectName().equals("EnemyProjectile") || renderable.getRenderableObjectName().equals("PlayerProjectile")) {
+			if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
 				if(!m.getExistingProjectiles().contains(renderable)) {
+					renderable.takeDamage(Integer.MAX_VALUE);
+				}
+			}
+
+			// remove the player's existing shot to 'undo' it
+			if(renderable.getRenderableObjectName().equals("PlayerProjectile")) {
+				if(m.getExistingProjectiles().contains(renderable)) {
 					renderable.takeDamage(Integer.MAX_VALUE);
 				}
 			}
@@ -287,31 +298,11 @@ public class GameEngine {
 		player.getPosition().setY(m.getPlayer().getPosition().getY());
 		player.setHealth((int) m.getPlayer().getHealth());
 
-		// now restore the state of the player's projectiles
-		int a=0;
-		int b=0;
-
-		while(a < m.getExistingProjectiles().size() && b < m.getPlayerProjectiles().size()) {
-			Projectile newP = m.getPlayerProjectiles().get(b);
-
-			if(m.getExistingProjectiles().get(a).getRenderableObjectName().equals("PlayerProjectile")) {
-				Projectile oldP = (Projectile) m.getExistingProjectiles().get(a);
-
-				oldP.getPosition().setX(newP.getPosition().getX());
-				oldP.getPosition().setY(newP.getPosition().getY());
-				oldP.setHealth((int) newP.getHealth());
-
-				b++;
-			}
-
-			a++;
-		}
-
 		//Now restore the bunker states
 		int c=0;
 		int d=0;
 
-		while(d < m.getBunkers().size() && a < renderables.size()) {
+		while(d < m.getBunkers().size() && c < renderables.size()) {
 			Bunker newB = m.getBunkers().get(d);
 
 			if(renderables.get(c).getRenderableObjectName().equals("Bunker")) {
@@ -377,8 +368,6 @@ public class GameEngine {
 		//Get player info
 		this.player = new Player(ConfigReader.getPlayerInfo());
 		renderables.add(player);
-
-		this.caretaker = new Caretaker();
 
 		Director director = new Director();
 		BunkerBuilder bunkerBuilder = new BunkerBuilder();

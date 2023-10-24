@@ -64,7 +64,7 @@ public class GameWindow {
         this.height = model.getGameHeight();
         this.timer = model.getTimer();
         this.score = model.getScore();
-        this.caretaker = model.getCaretaker();
+        this.caretaker = new Caretaker();
 
         pane = new Pane();
         scene = new Scene(pane, width, height + 50);
@@ -116,7 +116,7 @@ public class GameWindow {
                 model.resetGame((Difficulty.getInstance().getConfigPath()));
                 endGameLabel.setText("");
                 gameOver = false;
-                caretaker = model.getCaretaker();
+                caretaker = new Caretaker();
             }
         });
         comboBox.setFocusTraversable(false);
@@ -152,6 +152,11 @@ public class GameWindow {
         timer.Notify();
         score.Notify();
 
+        if(model.playerHasShot()) {
+            caretaker.setMemento(model.saveState());
+            model.playerStoppedShooting();
+        }
+
         List<Renderable> renderables = model.getRenderables();
         for (Renderable entity : renderables) {
             boolean notFound = true;
@@ -174,6 +179,7 @@ public class GameWindow {
                 for (EntityView entityView : entityViews){
                     if (entityView.matchesEntity(entity)){
                         entityView.markForDelete();
+                        model.getPendingToRemoveRenderable().add(entity);
                     }
                 }
             }
