@@ -19,8 +19,10 @@ public class Memento {
     private Score score;
     private Timer timer;
     private ArrayList<Enemy> enemies;
+    private ArrayList<Renderable> existingEnemies;
     private ArrayList<Projectile> enemyProjectiles;
     private ArrayList<Renderable> existingProjectiles;
+    private ArrayList<Projectile> playerProjectiles;
     private ArrayList<Bunker> bunkers;
     private Player player;
 
@@ -29,7 +31,9 @@ public class Memento {
         this.timer = new Timer(engine.getTimer());
         this.enemies = new ArrayList<>();
         this.enemyProjectiles = new ArrayList<>();
+        this.existingEnemies = new ArrayList<>();
         this.existingProjectiles = new ArrayList<>();
+        this.playerProjectiles = new ArrayList<>();
         this.player = new Player(engine.getPlayer());
         this.bunkers = new ArrayList<>();
 
@@ -41,6 +45,7 @@ public class Memento {
                 Enemy newEnemy = new Enemy(enemy);
 
                 enemies.add(newEnemy);
+                existingEnemies.add(renderable);
             }
 
             else if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
@@ -52,6 +57,10 @@ public class Memento {
             }
 
             else if(renderable.getRenderableObjectName().equals("PlayerProjectile")) {
+                PlayerProjectile oldP = (PlayerProjectile) renderable;
+                Projectile newP = new PlayerProjectile(oldP);
+
+                playerProjectiles.add(newP);
                 existingProjectiles.add(renderable);
             }
 
@@ -76,12 +85,20 @@ public class Memento {
         return enemies;
     }
 
+    public List<Renderable> getExistingEnemies() {
+        return existingEnemies;
+    }
+
     public List<Projectile> getEnemyProjectiles() {
         return enemyProjectiles;
     }
 
     public List<Renderable> getExistingProjectiles() {
         return existingProjectiles;
+    }
+
+    public List<Projectile> getPlayerProjectiles() {
+        return playerProjectiles;
     }
 
     public Player getPlayer() {

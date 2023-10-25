@@ -20,8 +20,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -31,7 +30,6 @@ import invaders.rendering.Renderable;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import org.json.simple.JSONObject;
 
 public class GameWindow {
@@ -74,8 +72,12 @@ public class GameWindow {
         bottomBar.setLayoutY(height - 30);
 
         HBox labels = new HBox();
-        labels.setSpacing(70);
-        labels.setPadding(new Insets(20, 0, 0, 50));
+        labels.setSpacing(40);
+        labels.setPadding(new Insets(30, 0, 0, 50));
+
+        HBox buttons = new HBox();
+        buttons.setSpacing(40);
+        buttons.setPadding(new Insets(30, 0, 0, 300));
 
         timerLabel.setTextFill(Paint.valueOf("white"));
         timerLabel.setFont(new Font(20));
@@ -84,6 +86,16 @@ public class GameWindow {
         scoreLabel.setTextFill(Paint.valueOf("white"));
         scoreLabel.setFont(new Font(20));
         score.attach(new ScoreObserver(score, scoreLabel));
+
+        Button save = new Button();
+        save.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                caretaker.setMemento(model.saveState());
+            }
+        });
+        save.setText("SAVE");
+        save.setFocusTraversable(false);
 
 
         Button redo = new Button();
@@ -113,6 +125,13 @@ public class GameWindow {
             @Override
             public void handle(ActionEvent event) {
                 Difficulty.getInstance().setDifficulty(comboBox.getValue());
+
+                for (Renderable entity : model.getRenderables()){
+                    if (!entity.isAlive()){
+                        model.getPendingToRemoveRenderable().add(entity);
+                    }
+                }
+
                 model.resetGame((Difficulty.getInstance().getConfigPath()));
                 endGameLabel.setText("");
                 gameOver = false;
@@ -121,8 +140,13 @@ public class GameWindow {
         });
         comboBox.setFocusTraversable(false);
 
-        labels.getChildren().addAll(scoreLabel, timerLabel, redo, comboBox);
-        bottomBar.getChildren().addAll(labels);
+        buttons.getChildren().addAll(save, redo, comboBox);
+        labels.getChildren().addAll(scoreLabel, timerLabel);
+
+        // Create a StackPane to overlay the HBoxes
+        StackPane stackPane = new StackPane(labels, buttons);
+
+        bottomBar.getChildren().addAll(stackPane);
         pane.getChildren().add(bottomBar);
 
         KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(this.model);
@@ -152,11 +176,6 @@ public class GameWindow {
         timer.Notify();
         score.Notify();
 
-        if(model.playerHasShot()) {
-            caretaker.setMemento(model.saveState());
-            model.playerStoppedShooting();
-        }
-
         List<Renderable> renderables = model.getRenderables();
         for (Renderable entity : renderables) {
             boolean notFound = true;
@@ -179,7 +198,6 @@ public class GameWindow {
                 for (EntityView entityView : entityViews){
                     if (entityView.matchesEntity(entity)){
                         entityView.markForDelete();
-                        model.getPendingToRemoveRenderable().add(entity);
                     }
                 }
             }
