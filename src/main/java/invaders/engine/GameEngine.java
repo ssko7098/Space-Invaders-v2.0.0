@@ -245,8 +245,7 @@ public class GameEngine {
 			i++;
 		}
 
-		// check whether a new projectile has been created in the time since a state was saved
-		// if it has, remove it.
+		// If a new projectile has been created in the time since a state was saved, remove it
 		for(Renderable renderable : renderables) {
 			if(renderable.getRenderableObjectName().equals("EnemyProjectile") || renderable.getRenderableObjectName().equals("PlayerProjectile")) {
 				if(!m.getExistingProjectiles().contains(renderable)) {
@@ -268,6 +267,12 @@ public class GameEngine {
 				oldP.getPosition().setX(newP.getPosition().getX());
 				oldP.getPosition().setY(newP.getPosition().getY());
 				oldP.setHealth((int) newP.getHealth());
+
+				//Special check to see if the projectile has been removed from the game already
+				if(!renderables.contains(m.getExistingProjectiles().get(x))) {
+					pendingToAddRenderable.add(oldP);
+					pendingToAddGameObject.add(oldP);
+				}
 
 				y++;
 			}

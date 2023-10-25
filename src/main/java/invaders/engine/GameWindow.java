@@ -69,15 +69,15 @@ public class GameWindow {
         this.background = new SpaceBackground(model, pane);
 
         VBox bottomBar = new VBox();
-        bottomBar.setLayoutY(height - 30);
+        bottomBar.setLayoutY(height);
 
         HBox labels = new HBox();
         labels.setSpacing(40);
-        labels.setPadding(new Insets(30, 0, 0, 50));
+        labels.setPadding(new Insets(0, 0, 0, 50));
 
         HBox buttons = new HBox();
         buttons.setSpacing(40);
-        buttons.setPadding(new Insets(30, 0, 0, 300));
+        buttons.setPadding(new Insets(0, 0, 0, 300));
 
         timerLabel.setTextFill(Paint.valueOf("white"));
         timerLabel.setFont(new Font(20));
