@@ -47,6 +47,7 @@ public class Enemy implements GameObject, Renderable {
         this.projectileImage = enemy.projectileImage;
         this.xVel = enemy.xVel;
         this.lives = enemy.lives;
+        this.random = enemy.random;
     }
 
     @Override

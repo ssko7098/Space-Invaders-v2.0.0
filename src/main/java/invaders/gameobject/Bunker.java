@@ -6,6 +6,8 @@ import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 import invaders.state.BunkerState;
 import invaders.state.GreenState;
+import invaders.state.RedState;
+import invaders.state.YellowState;
 import javafx.scene.image.Image;
 
 public class Bunker implements GameObject, Renderable {
@@ -22,9 +24,21 @@ public class Bunker implements GameObject, Renderable {
 
     //Copy constructor
     public Bunker(Bunker bunker) {
+        this.width = bunker.width;
+        this.height = bunker.height;
+        this.position = new Vector2D(bunker.getPosition().getX(), bunker.getPosition().getY());
         this.lives = bunker.lives;
         this.image = bunker.image;
-        this.state = bunker.state;
+
+        if(lives == 3) {
+            this.state = new GreenState(this);
+        }
+        else if(lives == 2) {
+            this.state = new YellowState(this);
+        }
+        else {
+            this.state = new RedState(this);
+        }
     }
 
     @Override

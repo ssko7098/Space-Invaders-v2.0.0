@@ -11,6 +11,7 @@ import invaders.observer.Timer;
 import invaders.physics.Vector2D;
 import invaders.rendering.Renderable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,24 +19,18 @@ public class Memento {
 
     private Score score;
     private Timer timer;
-    private ArrayList<Enemy> enemies;
-    private ArrayList<Renderable> existingEnemies;
-    private ArrayList<Projectile> enemyProjectiles;
-    private ArrayList<Renderable> existingProjectiles;
-    private ArrayList<Projectile> playerProjectiles;
-    private ArrayList<Bunker> bunkers;
     private Player player;
+
+    private ArrayList<Renderable> renderables;
+    private ArrayList<GameObject> gameObjects;
 
     public Memento(GameEngine engine) {
         this.score = new Score(engine.getScore());
         this.timer = new Timer(engine.getTimer());
-        this.enemies = new ArrayList<>();
-        this.enemyProjectiles = new ArrayList<>();
-        this.existingEnemies = new ArrayList<>();
-        this.existingProjectiles = new ArrayList<>();
-        this.playerProjectiles = new ArrayList<>();
+        this.renderables = new ArrayList<>();
+        this.gameObjects = new ArrayList<>();
+
         this.player = new Player(engine.getPlayer());
-        this.bunkers = new ArrayList<>();
 
         for(int i=0; i<engine.getRenderables().size(); i++) {
             Renderable renderable = engine.getRenderables().get(i);
@@ -44,31 +39,31 @@ public class Memento {
                 Enemy enemy = (Enemy) renderable;
                 Enemy newEnemy = new Enemy(enemy);
 
-                enemies.add(newEnemy);
-                existingEnemies.add(renderable);
+                renderables.add(newEnemy);
+                gameObjects.add(newEnemy);
             }
 
             else if(renderable.getRenderableObjectName().equals("EnemyProjectile")) {
                 EnemyProjectile oldP = (EnemyProjectile) renderable;
                 Projectile newP = new EnemyProjectile(oldP);
 
-                enemyProjectiles.add(newP);
-                existingProjectiles.add(renderable);
+                renderables.add(newP);
+                gameObjects.add(newP);
             }
 
             else if(renderable.getRenderableObjectName().equals("PlayerProjectile")) {
                 PlayerProjectile oldP = (PlayerProjectile) renderable;
                 Projectile newP = new PlayerProjectile(oldP);
 
-                playerProjectiles.add(newP);
-                existingProjectiles.add(renderable);
+                renderables.add(newP);
+                gameObjects.add(newP);
             }
 
             else if(renderable.getRenderableObjectName().equals("Bunker")) {
                 Bunker oldB = (Bunker) renderable;
                 Bunker newB = new Bunker(oldB);
 
-                bunkers.add(newB);
+                renderables.add(newB);
             }
         }
     }
@@ -81,32 +76,10 @@ public class Memento {
         return timer;
     }
 
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
+    public List<Renderable> getRenderables() { return renderables; }
 
-    public List<Renderable> getExistingEnemies() {
-        return existingEnemies;
-    }
+    public List<GameObject> getGameObjects() {return gameObjects;}
 
-    public List<Projectile> getEnemyProjectiles() {
-        return enemyProjectiles;
-    }
-
-    public List<Renderable> getExistingProjectiles() {
-        return existingProjectiles;
-    }
-
-    public List<Projectile> getPlayerProjectiles() {
-        return playerProjectiles;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public List<Bunker> getBunkers() {
-        return bunkers;
-    }
+    public Player getPlayer() {return player;}
 
 }
