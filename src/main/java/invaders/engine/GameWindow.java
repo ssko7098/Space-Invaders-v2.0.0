@@ -104,6 +104,13 @@ public class GameWindow {
             public void handle(MouseEvent event) {
                 try{
                     model.recoverState(caretaker.getMemento());
+
+                    for (Renderable entity : model.getRenderables()){
+                        if (!entity.isAlive()){
+                            model.getPendingToRemoveRenderable().add(entity);
+                        }
+                    }
+
                 }catch(NullPointerException e) {
                     System.out.println("You have no states currently saved");
                 }

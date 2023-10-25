@@ -30,13 +30,13 @@ public class Bunker implements GameObject, Renderable {
         this.lives = bunker.lives;
         this.image = bunker.image;
 
-        if(lives == 3) {
+        if(this.lives == 3) {
             this.state = new GreenState(this);
         }
-        else if(lives == 2) {
+        else if(this.lives == 2) {
             this.state = new YellowState(this);
         }
-        else {
+        else if(this.lives == 1) {
             this.state = new RedState(this);
         }
     }

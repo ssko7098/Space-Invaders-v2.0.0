@@ -236,8 +236,15 @@ public class GameEngine {
 
 		//Reset all entities apart from the player
 		for(Renderable entity : renderables) {
-			if(!entity.getRenderableObjectName().equals("Player")) {
+			if(!entity.getRenderableObjectName().equals("Player") && !entity.getRenderableObjectName().equals("Bunker")) {
 				entity.takeDamage(Integer.MAX_VALUE);
+			}
+
+			//special reset for bunker because it only loses 1 health no matter what
+			else if(entity.getRenderableObjectName().equals("Bunker")) {
+				entity.takeDamage(1);
+				entity.takeDamage(1);
+				entity.takeDamage(1);
 			}
 		}
 	}
