@@ -16,11 +16,12 @@ public class TimerObserver implements Observer{
 
     @Override
     public void update() {
-        seconds = (int) timer.getTimer();
+        seconds = (int) timer.getTimer()[1];
+        minutes = (int) timer.getTimer()[0];
 
         if(seconds == 60) {
-            timer.setTimer(0);
             minutes ++;
+            timer.setTimer(new double[]{minutes, 0});
         }
 
         this.label.setText("Time: " + String.format("%d:%02d", minutes, seconds));

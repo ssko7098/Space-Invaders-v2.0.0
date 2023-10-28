@@ -78,7 +78,7 @@ public class GameEngine {
 			renderables.add(enemy);
 		}
 
-		timer.setTimer(0);
+		timer.setTimer(new double[]{0, 0});
 
 	}
 
@@ -88,9 +88,7 @@ public class GameEngine {
 	public void update(){
 		counter+=1;
 
-		if(player.isAlive()) {
-			timer.setTimer(timer.getTimer() + 0.0085);
-		}
+		timer.setTimer(new double[]{timer.getTimer()[0], timer.getTimer()[1] + 0.0085});
 
 		movePlayer();
 
@@ -287,7 +285,6 @@ public class GameEngine {
 	public void resetGame(String config) {
 		endGame();
 
-
 		// Read the config here
 		ConfigReader.parse(config);
 
@@ -317,7 +314,7 @@ public class GameEngine {
 			renderables.add(enemy);
 		}
 
-		timer.setTimer(0);
+		timer.setTimer(new double[]{0, 0});
 		score.setScore(0);
 		counter = 45;
 	}

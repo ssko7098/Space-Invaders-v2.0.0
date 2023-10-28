@@ -16,7 +16,7 @@ public class EntityViewImpl implements EntityView {
         this.position = entity.getPosition();
         node = new ImageView(entity.getImage());
         node.setViewOrder(getViewOrder(entity.getLayer()));
-        update(0.0, 0.0);
+        update(0.0, 20.0);
     }
 
     private static double getViewOrder(Renderable.Layer layer) {

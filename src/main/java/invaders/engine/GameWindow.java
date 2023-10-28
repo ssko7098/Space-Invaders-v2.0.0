@@ -42,7 +42,7 @@ public class GameWindow {
     private Renderable background;
 
     private double xViewportOffset = 0.0;
-    private double yViewportOffset = 0.0;
+    private double yViewportOffset = 20.0;
     // private static final double VIEWPORT_MARGIN = 280.0;
 
     private Score score;
@@ -50,6 +50,7 @@ public class GameWindow {
 
     private Caretaker caretaker;
 
+    private TimerObserver timerObserver;
     private Label timerLabel = new Label();
     private Label scoreLabel = new Label();
 
@@ -69,7 +70,7 @@ public class GameWindow {
         this.background = new SpaceBackground(model, pane);
 
         VBox bottomBar = new VBox();
-        bottomBar.setLayoutY(height);
+        bottomBar.setLayoutY(height - 5);
 
         HBox labels = new HBox();
         labels.setSpacing(40);
@@ -81,7 +82,8 @@ public class GameWindow {
 
         timerLabel.setTextFill(Paint.valueOf("white"));
         timerLabel.setFont(new Font(20));
-        timer.attach(new TimerObserver(timer, timerLabel));
+        timerObserver = new TimerObserver(timer, timerLabel);
+        timer.attach(timerObserver);
 
         scoreLabel.setTextFill(Paint.valueOf("white"));
         scoreLabel.setFont(new Font(20));
@@ -142,7 +144,9 @@ public class GameWindow {
                 model.resetGame((Difficulty.getInstance().getConfigPath()));
                 endGameLabel.setText("");
                 gameOver = false;
-                caretaker = new Caretaker();
+                caretaker.setMemento(null);
+                timer.setTimer(new double[]{0, 0});
+                timer.attach(timerObserver);
             }
         });
         comboBox.setFocusTraversable(false);
@@ -252,6 +256,7 @@ public class GameWindow {
 
         if(gameOver) {
             model.endGame();
+            timer.detach(timerObserver);
         }
 
     }
