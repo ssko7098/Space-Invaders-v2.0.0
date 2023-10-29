@@ -169,24 +169,4 @@ public class Enemy implements GameObject, Renderable {
         this.projectileStrategy = projectileStrategy;
     }
 
-    public ProjectileStrategy getProjectileStrategy() {
-        return projectileStrategy;
-    }
-
-    public List<Projectile> getEnemyProjectiles() {
-        return enemyProjectile;
-    }
-
-    public Image getProjectileImage() {
-        return projectileImage;
-    }
-
-    public void setSpeed(int xVel) {
-        this.xVel = xVel;
-    }
-
-    public int getSpeed() {
-        return xVel;
-    }
-
 }

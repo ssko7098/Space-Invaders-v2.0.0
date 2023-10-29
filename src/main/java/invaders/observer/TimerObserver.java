@@ -6,8 +6,6 @@ public class TimerObserver implements Observer{
 
     private Label label;
     private Timer timer;
-    private int minutes;
-    private int seconds;
 
     public TimerObserver(Timer timer, Label label) {
         this.label = label;
@@ -16,8 +14,8 @@ public class TimerObserver implements Observer{
 
     @Override
     public void update() {
-        seconds = (int) timer.getTimer()[1];
-        minutes = (int) timer.getTimer()[0];
+        int seconds = (int) timer.getTimer()[1];
+        int minutes = (int) timer.getTimer()[0];
 
         if(seconds == 60) {
             minutes ++;

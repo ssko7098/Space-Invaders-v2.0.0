@@ -49,37 +49,7 @@ public class GameEngine {
 	private Timer timer = new Timer();
 
 	public GameEngine(String config){
-		// Read the config here
-		ConfigReader.parse(config);
-
-		// Get game width and height
-		gameWidth = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("x")).intValue();
-		gameHeight = ((Long)((JSONObject) ConfigReader.getGameInfo().get("size")).get("y")).intValue();
-
-		//Get player info
-		this.player = new Player(ConfigReader.getPlayerInfo());
-		renderables.add(player);
-
-		Director director = new Director();
-		BunkerBuilder bunkerBuilder = new BunkerBuilder();
-		//Get Bunkers info
-		for(Object eachBunkerInfo:ConfigReader.getBunkersInfo()){
-			Bunker bunker = director.constructBunker(bunkerBuilder, (JSONObject) eachBunkerInfo);
-			gameObjects.add(bunker);
-			renderables.add(bunker);
-		}
-
-
-		EnemyBuilder enemyBuilder = new EnemyBuilder();
-		//Get Enemy info
-		for(Object eachEnemyInfo:ConfigReader.getEnemiesInfo()){
-			Enemy enemy = director.constructEnemy(this,enemyBuilder,(JSONObject)eachEnemyInfo);
-			gameObjects.add(enemy);
-			renderables.add(enemy);
-		}
-
-		timer.setTimer(new double[]{0, 0});
-
+		resetGame(config);
 	}
 
 	/**
